@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>YOLO avec Flask</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #preview {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        #result {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Détection d'objets avec YOLO</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" accept="image/*" required>
+        <button type="submit">Analyser</button>
+    </form>
+    <div>
+        <h2>Image originale</h2>
+        <img id="preview" style="display: none;">
+        <h2>Résultat</h2>
+        <img id="result" style="display: none;">
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            document.getElementById('preview').src = data.original;
+            document.getElementById('preview').style.display = 'block';
+            document.getElementById('result').src = data.result;
+            document.getElementById('result').style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>
